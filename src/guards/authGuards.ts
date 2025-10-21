@@ -1,14 +1,14 @@
-import { jwtDecode } from "jwt-decode";
-import { validateToken } from "../services";
+import {jwtDecode} from "jwt-decode";
+import { validateToken, refreshToken } from "../services";
 
 export const authGuard = async (to, from, next) => {
-  const publicRoute: string[] = ['/login', '/register', '/forgot-password'];
+  const publicRoutes: string[] = ['/login', '/register', '/forgot-password'];
 
-  if (publicRoute.includes(to.path)) {
+  if (publicRoutes.includes(to.path)) {
     return next();
   }
 
-  const token: string | null = localStorage.getItem('token');
+  let token: any = localStorage.getItem('token');
 
   if (!token) {
     localStorage.clear();
@@ -22,16 +22,20 @@ export const authGuard = async (to, from, next) => {
 
     if (dateExp < now) {
       console.warn('Token expirado');
-      localStorage.clear();
-      return next('/login');
-    }
-    const ojb = {
-        "token":token
-    }
-    // // Validar token con backend
-    const response = await validateToken(ojb);
+      const response = await refreshToken();
 
-    
+      if (response.data?.status === 200) {
+        token = response.data.data.access_token;
+        localStorage.setItem('token', token);
+      } else {
+        localStorage.clear();
+        return next('/login');
+      }
+    }
+
+    // Validar token con backend
+    const obj = { token };
+    const response = await validateToken(obj);
 
     if (!response || response.status !== 200) {
       console.warn('Token inválido en backend');
@@ -39,7 +43,6 @@ export const authGuard = async (to, from, next) => {
       return next('/login');
     }
 
-    // Token válido → permitir acceso
     return next();
 
   } catch (error) {
