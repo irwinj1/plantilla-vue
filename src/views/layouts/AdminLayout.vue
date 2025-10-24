@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Side Menu -->
-    <aside-menu-component :drawer="drawer" :menu="menu"/>
+    <aside-menu-component :drawer="drawer" :menu="menu" @update:drawer="abrirAside" />
 
     <!-- Toolbar -->
     <tool-bar-component @abrir-aside="abrirAside" />
@@ -10,8 +10,11 @@
     <v-main>
       <v-container fluid>
         <router-view></router-view>
+        <alert-component />
       </v-container>
+      <footer-component class="position-fixed bottom-0" style="width: -webkit-fill-available;"></footer-component>
     </v-main>
+    
   </v-app>
 </template>
 
@@ -20,8 +23,10 @@ import { onMounted, ref } from 'vue'
 import AsideMenuComponent from '../../components/AsideMenuComponent.vue'
 import ToolBarComponent from '../../components/ToolBarComponent.vue'
 import { menu } from '../../config/utils/menu'
+import FooterComponent from '../../components/FooterComponent.vue'
+import AlertComponent from '../../components/AlertComponent.vue'
 
-const drawer = ref(true)
+const drawer = ref(false)
 
 const isMobil = ref<boolean>(false)
 
