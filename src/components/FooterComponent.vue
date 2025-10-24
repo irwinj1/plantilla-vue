@@ -1,0 +1,30 @@
+<template>
+    <v-footer class="d-flex flex-column"  rounded="lg">
+    <!-- <div class="d-flex w-100 align-center px-4 py-2">
+      <strong>Conectate a las redes sociales!</strong>
+
+      <div class="d-flex ga-2 ms-auto">
+        <v-btn
+          v-for="icon in icons"
+          :key="icon"
+          :icon="icon"
+          size="small"
+          variant="plain"
+        ></v-btn>
+      </div>
+    </div> -->
+
+    <div class="px-4 py-2  text-center w-100 rounded-lg">
+      {{ new Date().getFullYear() }} — <strong>Transportes Esperanza Gonzalez</strong>
+    </div>
+  </v-footer>
+
+</template>
+<script setup lang="ts">
+const icons = [
+    'mdi-facebook',
+    'mdi-twitter',
+    'mdi-linkedin',
+    'mdi-instagram',
+  ]
+</script>
