@@ -10,6 +10,7 @@ export const authGuard = async (to, from, next) => {
 
   let token: any = localStorage.getItem('token');
 
+
   if (!token) {
     localStorage.clear();
     return next('/login');
@@ -19,9 +20,10 @@ export const authGuard = async (to, from, next) => {
     const decoded: any = jwtDecode(token);
     const dateExp = new Date(decoded.exp * 1000);
     const now = new Date();
-
+    
     if (dateExp < now) {
       console.warn('Token expirado');
+      
       const response = await refreshToken();
 
       if (response.data?.status === 200) {
@@ -32,7 +34,6 @@ export const authGuard = async (to, from, next) => {
         return next('/login');
       }
     }
-
     // Validar token con backend
     const obj = { token };
     const response = await validateToken(obj);
